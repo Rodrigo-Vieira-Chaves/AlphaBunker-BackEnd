@@ -2,13 +2,13 @@ import { AccountCreateDTO } from '../models/DTOs/AccountCreateDTO';
 import { AccountDTO } from '../models/DTOs/AccountDTO';
 import { EmptyError } from '../errors/EmptyError';
 import { Service } from './Service';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { accountsDAO } from '../repositories/DAOs/accountsDAO';
 import { accountsPropertiesValidator } from '../validators/accountsPropertiesValidator';
 import { clientsPropertiesValidator } from '../validators/clientsPropertiesValidator';
 import { clientsService } from './clientsService';
 import { generateRandomAccount } from '../utils/generateRandomAccount';
 import { passwordCryptography } from '../utils/passwordCryptography';
-import { UnauthorizedError } from '../errors/UnauthorizedError';
 
 class AccountsService extends Service
 {
@@ -73,7 +73,7 @@ class AccountsService extends Service
 
         // Check if already there is an account with the same password.
         const accountsList = await accountsDAO.getAllAccountsFromClient(clientID);
-        const isPasswordRepeated = accountsList.find((account) => newAccount.password === account.password);
+        const isPasswordRepeated = accountsList.find((account) => passwordCryptography.comparePassword(newAccount.password, account.password as string));
 
         if (isPasswordRepeated) throw new UnauthorizedError('Cliente já usou essa senha em outra conta.');
 
