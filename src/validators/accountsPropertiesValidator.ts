@@ -21,55 +21,41 @@ class AccountsPropertiesValidator extends PropertiesValidator
     validateAll (account: AccountDTO)
     {
         const params =
-        [
-            account.branch,
-            account.branchDigit,
-            account.accountNumber,
-            account.accountNumberDigit,
-            account.password
-        ];
+            [
+                account.branch,
+                account.branchDigit,
+                account.accountNumber,
+                account.accountNumberDigit,
+                account.password
+            ];
 
         this.validateAllProperties(this.allValidators, params);
     }
 
     validateBranch (branch: number)
     {
-        if (branch < 0 || String(branch).length !== this.branchLength)
-        {
-            throw new ValidationError(`Favor providenciar número da agência em forma numérica de ${this.branchLength} dígitos, positivo.`);
-        }
+        if (branch < 0 || String(branch).length !== this.branchLength) throw new ValidationError(`Favor providenciar número da agência em forma numérica de ${this.branchLength} dígitos, positivo.`);
     }
 
     validateBranchDigit (branchDigit: number)
     {
-        if (branchDigit < 0 || branchDigit > 9)
-        {
-            throw new ValidationError('Favor providenciar dígito verificador da agência utilizando um número entre 0 a 9.');
-        }
+        if (branchDigit < 0 || branchDigit > 9) throw new ValidationError('Favor providenciar dígito verificador da agência utilizando um número entre 0 a 9.');
     }
 
     validateAccountNumber (accountNumber: number)
     {
-        if (accountNumber < 0 || String(accountNumber).length !== this.accountNumberLength)
-        {
-            throw new ValidationError(`Favor providenciar número da conta em forma numérica de ${this.accountNumberLength} dígitos, positivo.`);
-        }
+        if (accountNumber < 0 || String(accountNumber).length !== this.accountNumberLength) throw new ValidationError(`Favor providenciar número da conta em forma numérica de ${this.accountNumberLength} dígitos, positivo.`);
     }
 
     validateAccountNumberDigit (accountNumberDigit: number)
     {
-        if (accountNumberDigit < 0 || accountNumberDigit > 9)
-        {
-            throw new ValidationError('Favor providenciar dígito verificador da conta bancária utilizando um número entre 0 a 9.');
-        }
+        if (accountNumberDigit < 0 || accountNumberDigit > 9) throw new ValidationError('Favor providenciar dígito verificador da conta bancária utilizando um número entre 0 a 9.');
+
     }
 
     validateAccountPassword (password: string)
     {
-        if (!this.passwordRegex.test(password))
-        {
-            throw new ValidationError('Favor providenciar uma senha de 4 a 8 dígitos inteiros.');
-        }
+        if (!this.passwordRegex.test(password)) throw new ValidationError('Favor providenciar uma senha de 4 a 8 dígitos inteiros.');
     }
 }
 

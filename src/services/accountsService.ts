@@ -8,6 +8,7 @@ import { clientsPropertiesValidator } from '../validators/clientsPropertiesValid
 import { clientsService } from './clientsService';
 import { generateRandomAccount } from '../utils/generateRandomAccount';
 import { passwordCryptography } from '../utils/passwordCryptography';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
 
 class AccountsService extends Service
 {
@@ -37,7 +38,6 @@ class AccountsService extends Service
         return this.serviceResponseBuilder(result, 'Esse cliente não possui contas cadastradas.');
     }
 
-    // FIXME Here the client can only log into one account... make password UNIQUE?
     async getAccountByClientIDAndPassword (clientID: string, password: string)
     {
         const accounts = await accountsDAO.getAllAccountsFromClient(clientID);
@@ -66,13 +66,16 @@ class AccountsService extends Service
         }
         catch (error)
         {
-            if (!(error instanceof EmptyError))
-            {
-                throw error;
-            }
+            if (!(error instanceof EmptyError)) throw error;
 
             clientID = (await clientsService.createClient(newAccount.client)).data.clientID as string;
         }
+
+        // Check if already there is an account with the same password.
+        const accountsList = await accountsDAO.getAllAccountsFromClient(clientID);
+        const isPasswordRepeated = accountsList.find((account) => newAccount.password === account.password);
+
+        if (isPasswordRepeated) throw new UnauthorizedError('Cliente já usou essa senha em outra conta.');
 
         const randomAccount = generateRandomAccount();
         randomAccount.password = newAccount.password;

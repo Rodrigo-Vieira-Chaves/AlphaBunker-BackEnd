@@ -16,10 +16,8 @@ class AccountValidator
         const clientID = (await clientsService.getClientByCPF(clientCPF)).data.clientID as string;
         const accountRetrieved = (await accountsService.getAccountByBranchAndNumber(account)).data as AccountDTO;
 
-        if (accountRetrieved.clientID !== clientID)
-        {
-            throw new UnauthorizedError(`O cliente ${clientCPF} não é dono da conta informada.`);
-        }
+        if (accountRetrieved.clientID !== clientID) throw new UnauthorizedError(`O cliente ${clientCPF} não é dono da conta informada.`);
+
 
         return accountRetrieved;
     }
@@ -28,20 +26,16 @@ class AccountValidator
     {
         accountsPropertiesValidator.validateAccountPassword(password);
 
-        if (!passwordCryptography.comparePassword(password, hashedPassword))
-        {
-            throw new UnauthorizedError('Senha incorreta.');
-        }
+        if (!passwordCryptography.comparePassword(password, hashedPassword)) throw new UnauthorizedError('Senha incorreta.');
+
     }
 
     async validateAccountBalance (accountID: string, balanceComparison: number)
     {
         const accountBalance = (await accountsService.getAccountBalance(accountID as string)).data.balance as number;
 
-        if (accountBalance < balanceComparison)
-        {
-            throw new InsufficientBalanceError('Essa conta não possui saldo suficiente');
-        }
+        if (accountBalance < balanceComparison) throw new InsufficientBalanceError('Essa conta não possui saldo suficiente');
+
     }
 }
 

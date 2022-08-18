@@ -4,9 +4,9 @@ import { ValidationError } from '../errors/ValidationError';
 
 class ClientsPropertiesValidator extends PropertiesValidator
 {
-    private readonly nameRegex = /^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$/;
+    private readonly nameRegex = /^[A-ZÀ-Ÿ][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-ZÀ-Ÿ][A-zÀ-ÿ']+$/;
     private readonly emailRegex = /^(\S+)@((?:(?:(?!-)[a-zA-Z0-9-]{1,62}[a-zA-Z0-9])\.)+[a-zA-Z0-9]{2,12})$/;
-    private readonly cpfRegex = /(^\d{3}\.\d{3}\.\d{3}\-\d{2}$)/;
+    private readonly cpfRegex = /(^\d{3}\.\d{3}\.\d{3}-\d{2}$)/;
 
     private readonly allValidators =
         [
@@ -31,40 +31,23 @@ class ClientsPropertiesValidator extends PropertiesValidator
 
     validateName (name: string)
     {
-        if (name.length < 2)
-        {
-            throw new ValidationError('Nome do usuário deve possuir 2 ou mais caracteres.');
-        }
-
-        if (!this.nameRegex.test(name))
-        {
-            throw new ValidationError('Nome do usuário não pode ter números ou caracteres especiais, exceto: hífen, aspas simples e ponto.');
-        }
+        if (!this.nameRegex.test(name)) throw new ValidationError('Nome do usuário deve possuir nome e sobrenome e não pode ter números ou caracteres especiais.');
     }
 
     validateBirthday (birthday: string)
     {
         const birth = birthday.split('-');
-        if (isNaN(Date.parse(`${birth[2]}-${birth[1]}-${birth[0]}`)))
-        {
-            throw new ValidationError('A data de aniversário deve possuir o formato: DD-MM-YYYY e deve ser uma data válida.');
-        }
+        if (isNaN(Date.parse(`${birth[2]}-${birth[1]}-${birth[0]}`))) throw new ValidationError('A data de aniversário deve possuir o formato: DD-MM-YYYY e deve ser uma data válida.');
     }
 
     validateEmail (email: string)
     {
-        if (!this.emailRegex.test(email))
-        {
-            throw new ValidationError('Favor providenciar email no formato: \'email@provedor.extensao\'.');
-        }
+        if (!this.emailRegex.test(email)) throw new ValidationError('Favor providenciar email no formato: \'email@provedor.extensao\'.');
     }
 
     validateCPF (cpf: string)
     {
-        if (!this.cpfRegex.test(cpf))
-        {
-            throw new ValidationError('Favor providenciar CPF no formato: \'000.000.000-00\'.');
-        }
+        if (!this.cpfRegex.test(cpf)) throw new ValidationError('Favor providenciar CPF no formato: \'000.000.000-00\'.');
     }
 }
 
