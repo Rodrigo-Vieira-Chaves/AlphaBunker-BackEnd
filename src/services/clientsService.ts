@@ -2,6 +2,7 @@ import { AccountDTO } from '../models/DTOs/AccountDTO';
 import { ClientDTO } from '../models/DTOs/ClientDTO';
 import { Service } from './Service';
 import { accountsService } from './accountsService';
+import { authToken } from '../middlewares/AuthToken';
 import { clientsDAO } from '../repositories/DAOs/clientsDAO';
 import { clientsPropertiesValidator } from '../validators/clientsPropertiesValidator';
 
@@ -39,7 +40,8 @@ class ClientsService extends Service
         const result =
         {
             client,
-            account
+            account,
+            token: authToken.generateToken({ clientCPF: client.cpf, password: cpfAndPassword.password })
         };
 
         return this.serviceResponseBuilder([ result ], '');

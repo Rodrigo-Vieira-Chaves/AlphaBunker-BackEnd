@@ -15,10 +15,7 @@ class TransactionsPropertiesValidator extends PropertiesValidator
 
     validateAmmount (ammount: number)
     {
-        if (ammount === 0)
-        {
-            throw new ValidationError('Valor de uma transação deve ser um número maior ou menor que 0.');
-        }
+        if (ammount === 0) throw new ValidationError('Valor de uma transação deve ser um número maior ou menor que 0.');
     }
 }
 

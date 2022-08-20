@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt';
 
 class PasswordCryptography
 {
-
     encryptPassword (password: string)
     {
         return bcrypt.hashSync(String(password), 10);

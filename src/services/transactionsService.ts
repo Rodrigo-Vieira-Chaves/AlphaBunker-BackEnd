@@ -85,10 +85,7 @@ class TransactionsService extends Service
         accountValidator.validateAccountPassword(transfer.source.account.password as string, sourceAccount.password as string);
         await accountValidator.validateAccountBalance(sourceAccount.accountID as string, transfer.ammount - this.transferFee);
 
-        if (sourceAccount.accountID === destinationAccount.accountID)
-        {
-            throw new ValidationError('A conta origem e a conta destino devem ser diferentes.');
-        }
+        if (sourceAccount.accountID === destinationAccount.accountID) throw new ValidationError('A conta origem e a conta destino devem ser diferentes.');
 
         delete transfer.source.account.password;
         const result = await this.createTransaction(

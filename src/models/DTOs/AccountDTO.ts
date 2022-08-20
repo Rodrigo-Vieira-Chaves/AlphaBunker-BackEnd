@@ -7,6 +7,7 @@ interface AccountDTO
   accountNumber: number;
   accountNumberDigit: number;
   password?: string;
+  balance?: number;
 }
 
 export { AccountDTO };

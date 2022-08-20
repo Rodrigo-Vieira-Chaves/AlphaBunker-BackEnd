@@ -30,10 +30,10 @@ class AccountsService extends Service
         return this.serviceResponseBuilder(result, `Essa Agência/Conta não existe: Ag: ${account.branch}-${account.branchDigit} Conta: ${account.accountNumber}-${account.accountNumberDigit}`);
     }
 
-    async getClientAccounts (clientID: { id: string })
+    async getClientAccounts (clientCPF: { cpf: string })
     {
-        await clientsService.getClientByID(clientID.id);
-        const result = await accountsDAO.getAllAccountsFromClientWithoutPassword(clientID.id);
+        const client = await clientsService.getClientByCPF(clientCPF.cpf);
+        const result = await accountsDAO.getAllAccountsFromClientWithoutPassword(client.data.clientID);
 
         return this.serviceResponseBuilder(result, 'Esse cliente não possui contas cadastradas.');
     }

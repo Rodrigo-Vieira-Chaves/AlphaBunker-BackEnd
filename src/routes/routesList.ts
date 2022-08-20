@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import { accountsController } from '../controllers/accountsController';
+import { authToken } from '../middlewares/AuthToken';
 import { clientsController } from '../controllers/clientsController';
 import { transactionsController } from '../controllers/transactionsController';
 
@@ -34,14 +35,6 @@ class Routes
         return authenticateClientRoutes;
     }
 
-    private getClientAccounts ()
-    {
-        const getClientAccountsRoutes = express.Router();
-        getClientAccountsRoutes.get('/:id', accountsController.getClientAccounts.bind(accountsController));
-
-        return getClientAccountsRoutes;
-    }
-
     private configCreateAccountRoutes ()
     {
         const createAccountRoutes = express.Router();
@@ -50,10 +43,18 @@ class Routes
         return createAccountRoutes;
     }
 
+    private getClientAccounts ()
+    {
+        const getClientAccountsRoutes = express.Router();
+        getClientAccountsRoutes.get('/:cpf', authToken.validateToken.bind(authToken), accountsController.getClientAccounts.bind(accountsController));
+
+        return getClientAccountsRoutes;
+    }
+
     private configMakeDepositRoutes ()
     {
         const makeDepositRoutes = express.Router();
-        makeDepositRoutes.post('/', transactionsController.makeDeposit.bind(transactionsController));
+        makeDepositRoutes.post('/', authToken.validateToken.bind(authToken), transactionsController.makeDeposit.bind(transactionsController));
 
         return makeDepositRoutes;
     }
@@ -61,7 +62,7 @@ class Routes
     private configMakeWithdrawRoutes ()
     {
         const makeWithdrawRoutes = express.Router();
-        makeWithdrawRoutes.post('/', transactionsController.makeWithdraw.bind(transactionsController));
+        makeWithdrawRoutes.post('/', authToken.validateToken.bind(authToken), transactionsController.makeWithdraw.bind(transactionsController));
 
         return makeWithdrawRoutes;
     }
@@ -69,7 +70,7 @@ class Routes
     private configMakeTransferRoutes ()
     {
         const makeTransferRoutes = express.Router();
-        makeTransferRoutes.post('/', transactionsController.makeTransfer.bind(transactionsController));
+        makeTransferRoutes.post('/', authToken.validateToken.bind(authToken), transactionsController.makeTransfer.bind(transactionsController));
 
         return makeTransferRoutes;
     }
@@ -77,7 +78,7 @@ class Routes
     private configGetStatementsRoutes ()
     {
         const getStatementsRoutes = express.Router();
-        getStatementsRoutes.post('/', transactionsController.getStatementsOfAccount.bind(transactionsController));
+        getStatementsRoutes.post('/', authToken.validateToken.bind(authToken), transactionsController.getStatementsOfAccount.bind(transactionsController));
 
         return getStatementsRoutes;
     }
