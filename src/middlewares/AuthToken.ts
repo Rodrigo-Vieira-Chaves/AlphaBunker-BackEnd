@@ -7,7 +7,7 @@ class AuthToken
 {
     generateToken (payload: string | object | Buffer)
     {
-        return jwt.sign(payload, process.env.JWT_KEY as Secret, { expiresIn: '20000' });
+        return jwt.sign(payload, process.env.JWT_KEY as Secret, { expiresIn: '15m' });
     }
 
     validateToken (req: Request, res: Response, next: NextFunction)
